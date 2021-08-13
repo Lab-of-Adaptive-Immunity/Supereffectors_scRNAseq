@@ -1,0 +1,202 @@
+---
+title: "Supereffectors_Analysis_PART2"
+author: "Veronika Niederlova"
+date: "3 8 2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(include = TRUE, warning = FALSE, message = FALSE, error = TRUE, cache = TRUE)
+
+library("Matrix")
+library(Seurat)
+library(DT)
+library(dplyr)
+library(here)
+library(ggplot2)
+library(kableExtra)
+library(cowplot)
+library(tidyverse)
+library(reshape)
+library(SingleR)
+library(ProjecTILs)
+library(ggprism)
+
+convertHumanGeneList <- function(x){
+
+require("biomaRt")
+human = useMart("ensembl", dataset = "hsapiens_gene_ensembl")
+mouse = useMart("ensembl", dataset = "mmusculus_gene_ensembl")
+
+genesV2 = getLDS(attributes = c("hgnc_symbol"), filters = "hgnc_symbol", values = x , mart = human, attributesL = c("mgi_symbol"), martL = mouse, uniqueRows=T)
+
+humanx <- unique(genesV2[, 2])
+
+# Print the first 6 genes found to the screen
+print(head(humanx))
+return(humanx)
+}
+
+```
+
+The input of this analysis is a processed Seurat file output of Supereffectors_Analysis_PART2. The file is called E07_W3_510_data_init.rds and we expect that it's located in the ./data folder. In this part of the analysis workflow , we will perform all necessary QC steps leading to a filtered final file, in particular:
+
+* Annotation of cell types
+* Filtering low quality and contaminating cells
+* Normalization
+* Removing the effect of cell cycle.
+
+## Load the data
+
+
+```{r}
+E07_W3_510_data <- readRDS(here("data/E07_W3_510_data_TR.rds"))
+
+```
+
+The raw file contains r ncol(E07_W3_510_data) cells and r nrow(E07_W3_510_data) genes.
+
+## Annotation of cell types
+
+We will use the SingleR package to annotate cell types. As a reference, we will use the Immgen microarray dataset and Mouse RNA seq dataset.
+
+```{r}
+# Annotations with SingleR
+
+counts <- GetAssayData(E07_W3_510_data[["RNA"]])
+
+E07_W3_510_data_singler <- CreateSinglerObject(counts=counts,
+  project.name= "E07_Tregs", # choose
+  min.genes = 200, # ignore cells with fewer than 200 transcripts
+  technology = "10x", # choose
+  species = "Mouse",
+  citation = "Our 10x data exp 01-05", # choose
+  normalize.gene.length = FALSE,        # needed for full-length platforms (e.g. smartseq)
+  variable.genes = "de",  # see vignette
+  fine.tune = FALSE, # TRUE would take very long
+  reduce.file.size = TRUE, # leave out less-often used fields 
+  do.signatures = FALSE,
+  do.main.types = TRUE,
+  numCores = SingleR.numCores)
+
+## summary of main cell types
+
+#ImmGen
+summary(factor(E07_W3_510_data_singler$singler[[1]]$SingleR.single$labels))
+summary(factor(E07_W3_510_data_singler$singler[[1]]$SingleR.single.main$labels))
+
+#RNAseq
+summary(factor(E07_W3_510_data_singler$singler[[2]]$SingleR.single$labels))
+summary(factor(E07_W3_510_data_singler$singler[[2]]$SingleR.single.main$labels))
+
+
+E07_W3_510_data <- AddMetaData(E07_W3_510_data,
+E07_W3_510_data_singler$singler[[1]]$SingleR.single$labels,
+                                 col.name = "Immgen_annot_single")
+
+E07_W3_510_data <- AddMetaData(E07_W3_510_data,
+E07_W3_510_data_singler$singler[[1]]$SingleR.single.main$labels,
+                                 col.name = "Immgen_annot_single_main")
+
+E07_W3_510_data <- AddMetaData(E07_W3_510_data,
+E07_W3_510_data_singler$singler[[2]]$SingleR.single.main$labels,
+                                 col.name = "MouseRNAseq_single_main")
+
+E07_W3_510_data <- AddMetaData(E07_W3_510_data,
+E07_W3_510_data_singler$singler[[2]]$SingleR.single$labels,
+                                 col.name = "MouseRNAseq_single")
+```
+
+
+```{r fig.width=8, fig.height=5}
+DimPlot(E07_W3_510_data, group.by = "Immgen_annot_single")
+DimPlot(E07_W3_510_data, group.by = "MouseRNAseq_single")
+DimPlot(E07_W3_510_data, group.by = "seurat_clusters")
+```
+
+We see that clusters 8 and 11 contain cells annotated as non-T-cells. We will remove these clusters in the next steps.
+
+## Filtering low quality and contaminating cells
+
+We can also visualize the quality metrics in our cells:
+
+```{r fig.width=8, fig.height=5}
+
+VlnPlot(E07_W3_510_data, features = c("nCount_RNA","nFeature_RNA")) + ggtitle("Counts of reads and counts of detected genes per cell")
+VlnPlot(E07_W3_510_data, features = c("percent.mt","percent.rt")) + ggtitle("Percentage of mitochondrial and ribosomal genes")
+
+```
+
+Based on these plots, we will filter our dataset for the following conditions:
+* Remove cells with higher content of mitochondrial genes than 7.5%
+* Remove clusters with non-T cell annotated cells (clusters 8 and 11)
+* Remove clusters with mostly T-cell annotations, but low detected counts of UMIs/genes (clusters 8 and 9)
+
+
+```{r}
+E07_W3_510_data_filt <- subset(E07_W3_510_data, percent.mt < 7.5 & seurat_clusters %in% c(0:7,10))
+```
+
+## Normalization, dimensional reduction
+
+
+```{r}
+E07_W3_510_data_filt <- NormalizeData(E07_W3_510_data_filt, verbose = FALSE)
+E07_W3_510_data_filt <- ScaleData(E07_W3_510_data_filt, verbose = FALSE)
+E07_W3_510_data_filt <- FindVariableFeatures(E07_W3_510_data_filt, nfeatures = 1000, verbose = FALSE)
+E07_W3_510_data_filt <- RunPCA(E07_W3_510_data_filt, npcs = 12, verbose = FALSE)
+E07_W3_510_data_filt <- RunUMAP(E07_W3_510_data_filt, reduction = "pca", dims = 1:12)
+E07_W3_510_data_filt <- FindNeighbors(E07_W3_510_data_filt, dims = 1:12)
+E07_W3_510_data_filt <- FindClusters(E07_W3_510_data_filt, resolution = 0.3)
+
+md <- E07_W3_510_data_filt@meta.data %>% mutate(dereg = case_when(hashtags %in% c("Mouse_Hashtag_5","Mouse_Hashtag_6","Mouse_Hashtag_7") ~ "DEREG-",
+                                                                  TRUE ~ "DEREG+"))
+E07_W3_510_data_filt@meta.data <- md
+rownames(E07_W3_510_data_filt@meta.data) <- colnames(E07_W3_510_data_filt)
+```
+
+Here, we can see the resulting UMAP projection split by different conditions or animals.
+
+```{r  fig.width=8, fig.height=5}
+
+DimPlot(E07_W3_510_data_filt, group.by = "hashtags")
+DimPlot(E07_W3_510_data_filt, group.by = "dereg")
+
+```
+
+
+
+## Removing the effect of cell cycle.
+
+Last, we will estimate the effect of cell cycle, as our dataset contained proliferating T cells as well as memory T cells.
+
+
+```{r}
+FeaturePlot(E07_W3_510_data_filt, features = c("Mki67","Pcna"))
+```
+
+We can see that 
+```{r}
+ s.genes <- cc.genes.updated.2019$s.genes
+ g2m.genes <- cc.genes.updated.2019$g2m.genes
+# 
+ m.s.genes <- convertHumanGeneList(cc.genes.updated.2019$s.genes)
+ m.g2m.genes <- convertHumanGeneList(cc.genes.updated.2019$g2m.genes)
+
+seu_wocc <- CellCycleScoring(E07_W3_510_data_filt, s.features = m.s.genes, g2m.features = m.g2m.genes, set.ident = TRUE)
+DimPlot(seu_wocc, group.by = "Phase")
+
+seu_wocc <- ScaleData(seu_wocc, vars.to.regress = c("S.Score", "G2M.Score"), features = rownames(seu_wocc))
+ seu_wocc <- FindVariableFeatures(seu_wocc, selection.method = "vst", nfeatures = 800,verbose = FALSE)
+  
+seu_wocc <- RunPCA(seu_wocc, npcs = 12, verbose = FALSE)
+seu_wocc <- RunUMAP(seu_wocc, reduction = "pca", dims = 1:12)
+  seu_wocc <- FindNeighbors(seu_wocc, dims = 1:12)
+  seu_wocc <- FindClusters(seu_wocc, resolution = 0.3)
+  
+  DimPlot(seu_wocc)
+  DimPlot(seu_wocc, group.by = "dereg")
+```
+
+
