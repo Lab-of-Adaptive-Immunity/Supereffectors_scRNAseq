@@ -126,9 +126,10 @@ Perform pre-clustering. This encompasses log-normalization, searching for variab
 ```{r, include=F, results=F}
 Treg_seu <- NormalizeData(Treg_seu)
 Treg_seu <- FindVariableFeatures(Treg_seu, selection.method = "vst", nfeatures = 2000)
-Treg_seu <- ScaleData(Treg_seu)
+all.genes <- rownames(Treg_seu)
+Treg_seu <- ScaleData(Treg_seu, features = all.genes)
 Treg_seu <- RunPCA(Treg_seu, features = VariableFeatures(object = Treg_seu))
-Treg_seu <- RunUMAP(Treg_seu, dims = 1:15)
+Treg_seu <- RunUMAP(Treg_seu, dims = 1:15, n.neighbors = 40)
 
 Treg_seu <- FindNeighbors(Treg_seu, dims = 1:15, nn.method = 'rann')
 Treg_seu <- FindClusters(Treg_seu, resolution = 0.8, random.seed = 42)
