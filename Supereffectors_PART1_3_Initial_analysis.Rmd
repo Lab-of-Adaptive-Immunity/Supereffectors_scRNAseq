@@ -63,7 +63,7 @@ build.metavector <- function(seurat.obj, hashtag.obj, hash.groups, descriptors, 
 Load hashtags from files:
 
 ```{r hashtags}
-Treg_hashtags <- import.hashtags('Hashtags/',
+Treg_hashtags <- import.hashtags('',
                                  c('exp07_W3_Mouse_Hashtag_5.csv', 'exp07_W3_Mouse_Hashtag_6.csv',
                                    'exp07_W3_Mouse_Hashtag_7.csv', 'exp07_W3_Mouse_Hashtag_8.csv',
                                    'exp07_W3_Mouse_Hashtag_9.csv', 'exp07_W3_Mouse_Hashtag_10.csv'))
