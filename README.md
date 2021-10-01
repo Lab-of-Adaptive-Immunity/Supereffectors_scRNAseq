@@ -1,10 +1,10 @@
-## Supereffectors_scRNAseq
+# Supereffectors_scRNAseq
 
 ------------------------------------------------------------------------
 This repository contains analysis of scRNAseq data for the manuscript by Tsyklauri et al., 2022. 
 
 ------------------------------------------------------------------------
-# LICENSE: GNU GPL v3 for scripts.
+## LICENSE: GNU GPL v3 for scripts.
 
 All scripts are distributed to ease the reproduction of the analysis
 from the above paper, but WITHOUT ANY WARRANTY; without even the 
@@ -15,7 +15,7 @@ See the GNU General Public License for more details.
 
 **Deposited data:** LINK
 
-# Requirements
+## Requirements
 
 You need R 4.0.3 with following packages:
 * Seurat 4.0.0
@@ -30,7 +30,7 @@ tar.gz.files.
 
 ------------------------------------------------------------------------
 
-# PART 1:
+## PART 1:
 - Extraction of the used samples based on Cell Hashtags:  
 	
 	- Extraction of barcodes separated by Hashtags:
@@ -48,11 +48,11 @@ tar.gz.files.
 - For detailed information please see each script.
 
 
-# PART 2:
+## PART 2:
 - Quality control and filtering
 - Normalization, dimensionality reduction, clustering
 
 - For detailed information please see each script.
 
-# PART 3:
+## PART 3:
 - All figures for the manuscript
