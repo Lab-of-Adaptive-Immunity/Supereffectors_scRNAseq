@@ -36,7 +36,7 @@ tar.gz.files.
 	- Extraction of barcodes separated by Hashtags:
 		- Uses script: Supereffectors_PART1_1_generating_sample_lists.Rmd
 	- Demultiplexing of fastq files using said Hashtag files:
-		- Uses script: Supereffectors_PART1_2_demultiplexing.py
+		- Uses script: Supereffectors_PART1_2_demultiplexing.py  
 	    **Note:** If you have downloaded fastq files from link above this
 	    does not have to be ran, as those fastqs are already demultiplexed.
 	    You still need to run the script above to generate hashtag lists though.
