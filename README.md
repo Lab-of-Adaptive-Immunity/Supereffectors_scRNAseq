@@ -4,12 +4,12 @@
 This repository contains analysis of scRNAseq data for the manuscript by Tsyklauri et al., 2022. 
 
 ------------------------------------------------------------------------
-## LICENSE: GNU GPL v3 for scripts.
+## LICENSE: MIT for scripts.
 
 All scripts are distributed to ease the reproduction of the analysis
 from the above paper, but WITHOUT ANY WARRANTY; without even the 
 implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
-See the GNU General Public License for more details.
+See the MIT Licence for more details.
 
 **Manuscript:** LINK
 
