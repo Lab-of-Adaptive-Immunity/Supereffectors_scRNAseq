@@ -4,7 +4,7 @@
 This repository contains analysis of scRNAseq data for the manuscript by Tsyklauri et al., 2022. 
 
 ------------------------------------------------------------------------
-## LICENSE: MIT for scripts.
+## LICENSE: MIT License.
 
 All scripts are distributed to ease the reproduction of the analysis
 from the above paper, but WITHOUT ANY WARRANTY; without even the 
