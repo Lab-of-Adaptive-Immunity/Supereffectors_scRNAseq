@@ -23,7 +23,6 @@ You need R 4.0.3 with following packages:
 * ggplot
 * dplyr
 * tibble
-* ...
 
 You need also Cellranger 5.0.0, as well as a software that can open 
 tar.gz.files.
@@ -54,5 +53,6 @@ tar.gz.files.
 
 - For detailed information please see each script.
 
-## PART 3 (coming soon):
-- All figures for the manuscript
+<!-- ## PART 3:
+
+ - All figures for the manuscript -->
