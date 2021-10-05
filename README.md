@@ -9,7 +9,7 @@ This repository contains analysis of scRNAseq data for the manuscript by Tsyklau
 All scripts are distributed to ease the reproduction of the analysis
 from the above paper, but WITHOUT ANY WARRANTY; without even the 
 implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
-See the MIT Licence for more details.
+See the MIT Licence and LICENSE.md file for more details.
 
 **Manuscript:** LINK
 
