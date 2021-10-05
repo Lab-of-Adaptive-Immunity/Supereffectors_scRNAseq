@@ -54,5 +54,5 @@ tar.gz.files.
 
 - For detailed information please see each script.
 
-## PART 3:
-- All figures for the manuscript
+<> ## PART 3:
+<> - All figures for the manuscript
