@@ -1,0 +1,50 @@
+---
+title: "Supereffectors_PART3"
+author: "Veronika Niederlova"
+date: "15 10 2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(include = TRUE, warning = FALSE, message = FALSE, error = TRUE, cache = TRUE)
+
+library("Matrix")
+library(Seurat)
+library(DT)
+library(dplyr)
+library(here)
+library(ggplot2)
+library(kableExtra)
+library(cowplot)
+library(tidyverse)
+library(reshape)
+library(SingleR)
+library(ProjecTILs)
+library(ggprism)
+
+convertHumanGeneList <- function(x){
+
+require("biomaRt")
+human = useMart("ensembl", dataset = "hsapiens_gene_ensembl")
+mouse = useMart("ensembl", dataset = "mmusculus_gene_ensembl")
+
+genesV2 = getLDS(attributes = c("hgnc_symbol"), filters = "hgnc_symbol", values = x , mart = human, attributesL = c("mgi_symbol"), martL = mouse, uniqueRows=T)
+
+humanx <- unique(genesV2[, 2])
+
+# Print the first 6 genes found to the screen
+print(head(humanx))
+return(humanx)
+}
+
+```
+
+The input of this analysis is a processed Seurat file output of Supereffectors_Analysis_PART2. The file is called E07_W3_510_data.rds and we expect that it's located in the ./data folder. In this part of the analysis workflow , we will perform all necessary QC steps leading to a filtered final file, in particular:
+
+* Annotation of cell types
+* Filtering low quality and contaminating cells
+* Normalization
+* Removing the effect of cell cycle.
+
+## Load the data

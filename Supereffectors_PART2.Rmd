@@ -40,26 +40,33 @@ return(humanx)
 
 ```
 
-The input of this analysis is a processed Seurat file output of Supereffectors_Analysis_PART2. The file is called E07_W3_510_data_init.rds and we expect that it's located in the ./data folder. In this part of the analysis workflow , we will perform all necessary QC steps leading to a filtered final file, in particular:
+The input of this analysis is a processed Seurat file output of Supereffectors_Analysis_PART1. The file is called exp07_W3_Treg_processed_data_set_1_pre_filtering.rds. Please, download it from the GEO and save it to the ./data folder. 
 
-* Annotation of cell types
-* Filtering low quality and contaminating cells
-* Normalization
-* Removing the effect of cell cycle.
+In this part of the analysis workflow , we will perform all necessary QC steps leading to a filtered final file, in particular:
+
+
+- Annotation of cell types
+- Filtering low quality and contaminating cells
+- Normalization
+- Removing the effect of cell cycle.
 
 ## Load the data
 
 
 ```{r}
-E07_W3_510_data <- readRDS(here("data/E07_W3_510_data_TR.rds"))
+
+path_to_downloaded_file <- "G://48_lab/Project Tregs DIA/! Manuscript in preparation/RNAseq DATA for upload/exp07_W3_Treg_processed_data_set_1_pre_filtering.rds"
+
+E07_W3_510_data <- readRDS(path_to_downloaded_file)
 
 ```
 
-The raw file contains r ncol(E07_W3_510_data) cells and r nrow(E07_W3_510_data) genes.
+The raw file contains  `r ncol(E07_W3_510_data)` cells and `r nrow(E07_W3_510_data)` genes.
+
 
 ## Annotation of cell types
 
-We will use the SingleR package to annotate cell types. As a reference, we will use the Immgen microarray dataset and Mouse RNA seq dataset.
+We will use the SingleR package to annotate cell types. As a reference, we will use the Immgen microarray dataset and Mouse RNA seq dataset. Please note that to run this analysis, we use [the legacy version of the SingleR package](https://github.com/dviraran/SingleR).  
 
 ```{r}
 # Annotations with SingleR
@@ -108,11 +115,12 @@ E07_W3_510_data_singler$singler[[2]]$SingleR.single$labels,
                                  col.name = "MouseRNAseq_single")
 ```
 
+Based on the SingleR annotations, our sample contains the following cell types:
 
 ```{r fig.width=8, fig.height=5}
-DimPlot(E07_W3_510_data, group.by = "Immgen_annot_single")
-DimPlot(E07_W3_510_data, group.by = "MouseRNAseq_single")
-DimPlot(E07_W3_510_data, group.by = "seurat_clusters")
+cowplot::plot_grid(DimPlot(E07_W3_510_data, group.by = "Immgen_annot_main"), 
+DimPlot(E07_W3_510_data, group.by = "MouseRNAseq_single"))
+
 ```
 
 We see that clusters 8 and 11 contain cells annotated as non-T-cells. We will remove these clusters in the next steps.
@@ -129,9 +137,10 @@ VlnPlot(E07_W3_510_data, features = c("percent.mt","percent.rt")) + ggtitle("Per
 ```
 
 Based on these plots, we will filter our dataset for the following conditions:
-* Remove cells with higher content of mitochondrial genes than 7.5%
-* Remove clusters with non-T cell annotated cells (clusters 8 and 11)
-* Remove clusters with mostly T-cell annotations, but low detected counts of UMIs/genes (clusters 8 and 9)
+
+- Remove cells with higher content of mitochondrial genes than 7.5%
+- Remove clusters with non-T cell annotated cells (clusters 8 and 11)
+- Remove clusters with mostly T-cell annotations, but low detected counts of UMIs/genes (clusters 8 and 9)
 
 
 ```{r}
@@ -172,15 +181,16 @@ DimPlot(E07_W3_510_data_filt, group.by = "dereg")
 Last, we will estimate the effect of cell cycle, as our dataset contained proliferating T cells as well as memory T cells.
 
 
-```{r}
+```{r  fig.width=10, fig.height=5}
 FeaturePlot(E07_W3_510_data_filt, features = c("Mki67","Pcna"))
 ```
 
-We can see that 
+We can see that most of the variability is driven by cell cycle. In the next step, we will use the Seurat estimation of cell cycle phase scores. These scores will help us regress out the effect of the cell cycle.
+
 ```{r}
  s.genes <- cc.genes.updated.2019$s.genes
  g2m.genes <- cc.genes.updated.2019$g2m.genes
-# 
+
  m.s.genes <- convertHumanGeneList(cc.genes.updated.2019$s.genes)
  m.g2m.genes <- convertHumanGeneList(cc.genes.updated.2019$g2m.genes)
 
@@ -188,15 +198,22 @@ seu_wocc <- CellCycleScoring(E07_W3_510_data_filt, s.features = m.s.genes, g2m.f
 DimPlot(seu_wocc, group.by = "Phase")
 
 seu_wocc <- ScaleData(seu_wocc, vars.to.regress = c("S.Score", "G2M.Score"), features = rownames(seu_wocc))
- seu_wocc <- FindVariableFeatures(seu_wocc, selection.method = "vst", nfeatures = 800,verbose = FALSE)
-  
+seu_wocc <- FindVariableFeatures(seu_wocc, selection.method = "vst", nfeatures = 500,verbose = FALSE)
+
+
 seu_wocc <- RunPCA(seu_wocc, npcs = 12, verbose = FALSE)
 seu_wocc <- RunUMAP(seu_wocc, reduction = "pca", dims = 1:12)
-  seu_wocc <- FindNeighbors(seu_wocc, dims = 1:12)
-  seu_wocc <- FindClusters(seu_wocc, resolution = 0.3)
+seu_wocc <- FindNeighbors(seu_wocc, dims = 1:12)
+seu_wocc <- FindClusters(seu_wocc, resolution = 0.35)
   
-  DimPlot(seu_wocc)
-  DimPlot(seu_wocc, group.by = "dereg")
+DimPlot(seu_wocc)
+DimPlot(seu_wocc, group.by = "dereg")
+
+
+## In case you get mirror version of the paper UMAP:
+# seu_wocc@reductions$umap@cell.embeddings <- seu_wocc@reductions$umap@cell.embeddings*-1
+# DimPlot(seu_wocc)
+
 ```
 
 
