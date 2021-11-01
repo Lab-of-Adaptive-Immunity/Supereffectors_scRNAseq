@@ -47,15 +47,15 @@ seu_wocc <- readRDS(path_to_downloaded_file)
 
 •	UMAP plot with updated clustering 
 
-```{r}
+```{r fig.width=3.3}
 
 DimPlot(seu_wocc, group.by = "seurat_clusters2", pt.size = 0.5) + theme(axis.text = element_text(size = 11), 
                                                                         axis.title = element_text(size = 11),
                                                                         legend.text = element_text(size = 11)) + ggtitle("")
 
-# # ggsave(filename = "final_fig/fig_5b_leg.png", width = 16, height = 13, units = "cm")
-# # ggsave(filename = "final_fig/fig_5b_leg.eps", width = 16, height = 13, units = "cm")
-# # ggsave(filename = "final_fig/fig_5b_leg.svg", width = 16, height = 13, units = "cm")
+# ggsave(filename = "final_fig/fig_5b_leg.png", width = 16, height = 13, units = "cm")
+# ggsave(filename = "final_fig/fig_5b_leg.eps", width = 16, height = 13, units = "cm")
+# ggsave(filename = "final_fig/fig_5b_leg.svg", width = 16, height = 13, units = "cm")
 
 
 
@@ -65,14 +65,14 @@ DimPlot(seu_wocc, group.by = "seurat_clusters2", pt.size = 0.5) + theme(axis.tex
 
 •	UMAP with KLRK1 expression 
 
-```{r}
+```{r fig.width=3.3}
 FeaturePlot(seu_wocc, features = "Klrk1", pt.size = 0.5) + theme(axis.text = element_text(size = 11), 
                                                                         axis.title = element_text(size = 11),
                                                                         legend.text = element_text(size = 11)) + scale_x_continuous(breaks = c(-6,-3,0,3,6))
 
-# # ggsave(filename = "final_fig/fig_5c_leg.png", width = 16, height = 13, units = "cm")
-# # ggsave(filename = "final_fig/fig_5c_leg.eps", width = 16, height = 13, units = "cm")
-# # ggsave(filename = "final_fig/fig_5c_leg.svg", width = 16, height = 13, units = "cm")
+# ggsave(filename = "final_fig/fig_5c_leg.png", width = 16, height = 13, units = "cm")
+# ggsave(filename = "final_fig/fig_5c_leg.eps", width = 16, height = 13, units = "cm")
+# ggsave(filename = "final_fig/fig_5c_leg.svg", width = 16, height = 13, units = "cm")
 
 ```
 
@@ -80,14 +80,14 @@ FeaturePlot(seu_wocc, features = "Klrk1", pt.size = 0.5) + theme(axis.text = ele
 
 •	UMAP with differentiated cells from DEREG- and DEREG+ 
 
-```{r, fig.width=3.3}
+```{r, fig.width=3.7}
 Idents(seu_wocc) <- "dereg"
 DimPlot(seu_wocc,  pt.size = 0.5, cols = c("indianred2","royalblue")) + theme(axis.text = element_text(size = 11), 
                                                                         axis.title = element_text(size = 11),
                                                                         legend.text = element_text(size = 11)) + ggtitle("")
-# # ggsave(filename = "final_fig/fig_5d_leg.png", width = 18.3, height = 13, units = "cm")
-# # ggsave(filename = "final_fig/fig_5d_leg.eps", width = 18.3, height = 13, units = "cm")
-# # ggsave(filename = "final_fig/fig_5d_leg.svg", width = 18.3, height = 13, units = "cm")
+# ggsave(filename = "final_fig/fig_5d_leg.png", width = 18.3, height = 13, units = "cm")
+# ggsave(filename = "final_fig/fig_5d_leg.eps", width = 18.3, height = 13, units = "cm")
+# ggsave(filename = "final_fig/fig_5d_leg.svg", width = 18.3, height = 13, units = "cm")
 ```
 
 
@@ -96,7 +96,7 @@ DimPlot(seu_wocc,  pt.size = 0.5, cols = c("indianred2","royalblue")) + theme(ax
 
 •	Plots showing frequency of cells of different clusters in DEREG+ and DEREG- samples 
 
-```{r}
+```{r fig.width=9}
 
 # Calculate frequencies of clusters in different anuimals
 df4 <- seu_wocc@meta.data %>% group_by(hashtags, seurat_clusters2) %>% 
@@ -139,8 +139,8 @@ for(i in 0:4){
                  geom = "crossbar", width = 1) + theme(axis.text.x = element_blank())
  
 # Save figures
-# # ggsave(filename = "final_fig/fig_5e_leg.png", width = 38, height = 10, units = "cm")
-# # ggsave(filename = "final_fig/fig_5e_leg.svg", width = 38, height = 10, units = "cm")
+# ggsave(filename = "final_fig/fig_5e_leg.png", width = 38, height = 10, units = "cm")
+# ggsave(filename = "final_fig/fig_5e_leg.svg", width = 38, height = 10, units = "cm")
 
 ```
 
@@ -164,17 +164,17 @@ DimPlot(se, cols = c("orange2","forestgreen")) + theme(axis.text = element_text(
   ggtitle("") + scale_x_continuous(breaks = c(-5,-2.5,0,2.5,5))+xlim(c(-6,6))
 
 
-# # ggsave(filename = "final_fig/fig_5f1_leg.png", width = 16, height = 13, units = "cm")
-# # ggsave(filename = "final_fig/fig_5f1_leg.eps", width = 16, height = 13, units = "cm")
-# # ggsave(filename = "final_fig/fig_5f1_leg.svg", width = 16, height = 13, units = "cm")
+# ggsave(filename = "final_fig/fig_5f1_leg.png", width = 16, height = 13, units = "cm")
+# ggsave(filename = "final_fig/fig_5f1_leg.eps", width = 16, height = 13, units = "cm")
+# ggsave(filename = "final_fig/fig_5f1_leg.svg", width = 16, height = 13, units = "cm")
 
 DimPlot(se, cols = c("royalblue3","indianred2"), group.by = "dereg") + theme(axis.text = element_text(size = 11), 
                                                                         axis.title = element_text(size = 11),
                                                                         legend.text = element_text(size = 11)) + 
   ggtitle("") + scale_x_continuous(breaks = c(-5,-2.5,0,2.5,5)) +xlim(c(-6,6))
-# # ggsave(filename = "final_fig/fig_5f2_leg.png", width = 18.3, height = 13, units = "cm")
-# # ggsave(filename = "final_fig/fig_5f2_leg.eps", width = 18.3, height = 13, units = "cm")
-# # ggsave(filename = "final_fig/fig_5f2_leg.svg", width = 18.3, height = 13, units = "cm")
+# ggsave(filename = "final_fig/fig_5f2_leg.png", width = 18.3, height = 13, units = "cm")
+# ggsave(filename = "final_fig/fig_5f2_leg.eps", width = 18.3, height = 13, units = "cm")
+# ggsave(filename = "final_fig/fig_5f2_leg.svg", width = 18.3, height = 13, units = "cm")
 ```
 
 ### Figure 5G
@@ -184,23 +184,159 @@ DimPlot(se, cols = c("royalblue3","indianred2"), group.by = "dereg") + theme(axi
 ```{r}
 FeaturePlot(se, features = "Itga4", max.cutoff = 2) + theme(axis.text = element_text(size = 11), 
                                                                         axis.title = element_text(size = 11),
-                                                                        legend.text = element_text(size = 11)) + ggtitle("")+xlim(c(-6,6))
-# # ggsave(filename = "final_fig/fig_5f3_leg.png", width = 16, height = 13, units = "cm")
-# # ggsave(filename = "final_fig/fig_5f3_leg.eps", width = 16, height = 13, units = "cm")
-# # ggsave(filename = "final_fig/fig_5f3_leg.svg", width = 16, height = 13, units = "cm")
+                                                                        legend.text = element_text(size = 11))  + xlim(c(-6,6))
+# ggsave(filename = "final_fig/fig_5f3_leg.png", width = 16, height = 13, units = "cm")
+# ggsave(filename = "final_fig/fig_5f3_leg.eps", width = 16, height = 13, units = "cm")
+# ggsave(filename = "final_fig/fig_5f3_leg.svg", width = 16, height = 13, units = "cm")
 
 FeaturePlot(se, features = "Il7r", max.cutoff = 2) + theme(axis.text = element_text(size = 11), 
                                                                         axis.title = element_text(size = 11),
-                                                                        legend.text = element_text(size = 11)) + ggtitle("")+xlim(c(-6,6))
-# # ggsave(filename = "final_fig/fig_5f4_leg.png", width = 16, height = 13, units = "cm")
-# # ggsave(filename = "final_fig/fig_5f4_leg.eps", width = 16, height = 13, units = "cm")
-# # ggsave(filename = "final_fig/fig_5f4_leg.svg", width = 16, height = 13, units = "cm")
+                                                                        legend.text = element_text(size = 11)) + xlim(c(-6,6))
+# ggsave(filename = "final_fig/fig_5f4_leg.png", width = 16, height = 13, units = "cm")
+# ggsave(filename = "final_fig/fig_5f4_leg.eps", width = 16, height = 13, units = "cm")
+# ggsave(filename = "final_fig/fig_5f4_leg.svg", width = 16, height = 13, units = "cm")
 
 
 ```
 
 
+
+## Figure 5H
 ```{r}
+md <- seu_wocc@meta.data
+md$barcode <- colnames(seu_wocc)
+md <- md %>% mutate(is_subcluster = case_when(barcode %in% colnames(subset(se,seurat_clusters ==1)) ~ "Subcluster 1",
+                                              barcode %in% colnames(subset(se,seurat_clusters ==0)) ~ "Subcluster 0",
+                                              TRUE ~ "Other"))
+
+seu_wocc@meta.data <- md
+
+DimPlot(seu_wocc, cells.highlight = list(colnames(subset(se,seurat_clusters ==0)),colnames(subset(se,seurat_clusters ==1))), cols.highlight = c("forestgreen","orange2")) + theme(axis.text = element_text(size = 11), axis.title = element_text(size = 11),
+                                                                        legend.text = element_text(size = 11)) + ggtitle("")
+# ggsave(filename = "final_fig/fig_s5e5_leg.png", width = 18.3, height = 13, units = "cm")
+# ggsave(filename = "final_fig/fig_s5e5_leg.eps", width = 18.3, height = 13, units = "cm")
+# ggsave(filename = "final_fig/fig_s5e5_leg.svg", width = 18.3, height = 13, units = "cm")
+
+```
+
+•	reclustering of cluster 4 (SE cluster) same as D – DEREG+ and DEREG- cells
+•	same analysis as in Fig. 5E, but for subclusters of cluster 4 (SE cluster). 
+•	Projection of subclusters of cluster 4 into original UMAP plot (for Fig. S5E)
+•	TILpret – (comparison of our clusters with CD8+ T cells subsets formed during anti-viral response) for Fig. S5E
+
+
+# Figure S5
+
+
+### Figure S5B
+
+•	Expression of GzmB in DEREG- and DEREG+ samples (Fig. S5 B), change colours – red for DEREG+, blue for DEREG- 
+
+```{r}
+VlnPlot(seu_wocc, features = "Gzmb", cols = c("indianred2","royalblue3"), flip = TRUE) + theme(axis.text.x = element_text(angle = 0, size = 11), axis.text = element_text(size = 11), axis.title = element_text(size = 11), legend.text = element_text(size = 11))
+
+# ggsave(filename = "final_fig/fig_s5b_leg.png", width = 16, height = 8, units = "cm")
+# ggsave(filename = "final_fig/fig_s5b_leg.eps", width = 16, height = 8, units = "cm")
+# ggsave(filename = "final_fig/fig_s5b_leg.svg", width = 16, height = 8, units = "cm")
+```
+
+### Figure S5C
+
+•	Expression of different markers 
+
+```{r fig.height=13, fig.width=28}
+FeaturePlot(seu_wocc, features = c("Gzma", "Gzmb", "Gzmk", "Il2ra", "Il7r", "Cd7", "Ifitm1", "Ifitm2", "Ifitm3", "Klrd1", "Id2", "Id3", "Itga4", "Itgae", "Sell", "Ccr7", "Cxcr6", "Cd27"), ncol = 6) + theme(axis.text.x = element_text(angle = 0, size = 16), axis.text = element_text(size = 11), axis.title = element_text(size = 11), legend.text = element_text(size = 11))
+
+# ggsave(filename = "final_fig/fig_s5b_leg.png", width = 16, height = 8, units = "cm")
+# ggsave(filename = "final_fig/fig_s5b_leg.eps", width = 16, height = 8, units = "cm")
+# ggsave(filename = "final_fig/fig_s5b_leg.svg", width = 16, height = 8, units = "cm")
+```
+
+
+### Figure S5D
+
+•	ProjecTILs projection of supereffector cluster onto LCMV data. See the original publication [Andreatta et al., Nat Comm, 2021](https://www.nature.com/articles/s41467-021-23324-4). Classifications are stored in the object, but we provide full code for their calculation.
+
+```{r fig.height=16, fig.width=28, cache.lazy=FALSE}
+
+Tregs_filt_wocc <- readRDS("G://48_lab/Project Tregs DIA/! Manuscript in preparation/RNAseq DATA for upload/exp07_W3_Treg_processed_data_set_2_filtered.rds")
+
+Idents(Tregs_filt_wocc) <- Tregs_filt_wocc$seurat_clusters2
+
+ref <- readRDS("G://48_lab/Project scRNAseq/Scripts Verca/Supereffectors_scRNAseq/data/ref_LCMV_Atlas_mouse_v1.rds")
+
+query0 <- subset(Tregs_filt_wocc, seurat_clusters2 == 0)
+query.projected0 <- make.projection(query0, ref=ref, skip.normalize = T)
+p0 <- plot.projection(ref, query.projected0, linesize = 0.6) +
+  ggtitle("Cluster 0") +
+   theme(axis.text.x = element_text(size = 11),
+         title = element_text(size = 11),
+         axis.text = element_text(size = 11),
+         axis.title = element_text(size = 11),
+         legend.text = element_text(size = 11))
+
+query1 <- subset(Tregs_filt_wocc, seurat_clusters2 == 1)
+query.projected1 <- make.projection(query1, ref=ref, skip.normalize = T)
+p1 <- plot.projection(ref, query.projected1, linesize = 0.6) +
+  ggtitle("Cluster 1") +
+   theme(axis.text.x = element_text(size = 11),
+         title = element_text(size = 11),
+         axis.text = element_text(size = 11),
+         axis.title = element_text(size = 11),
+         legend.text = element_text(size = 11))
+
+query2 <- subset(Tregs_filt_wocc, seurat_clusters2 == 2)
+query.projected2 <- make.projection(query2, ref=ref, skip.normalize = T)
+p2 <- plot.projection(ref, query.projected2, linesize = 0.6) +
+  ggtitle("Cluster 2") +
+   theme(axis.text.x = element_text(size = 11),
+         title = element_text(size = 11),
+         axis.text = element_text(size = 11),
+         axis.title = element_text(size = 11),
+         legend.text = element_text(size = 11))
+
+query3 <- subset(Tregs_filt_wocc, seurat_clusters2 == 3)
+query.projected3 <- make.projection(query3, ref=ref, skip.normalize = T)
+p3 <- plot.projection(ref, query.projected3, linesize = 0.6) +
+  ggtitle("Cluster 3") +
+   theme(axis.text.x = element_text(size = 11),
+         title = element_text(size = 11),
+         axis.text = element_text(size = 11),
+         axis.title = element_text(size = 11),
+         legend.text = element_text(size = 11))
+
+query4 <- subset(Tregs_filt_wocc, seurat_clusters2 == 4)
+ query.projected4 <- make.projection(query4, ref=ref, skip.normalize = T)
+p4 <- plot.projection(ref, query.projected4, linesize = 0.6) +
+  ggtitle("Cluster 4") +
+   theme(axis.text.x = element_text(size = 11),
+         title = element_text(size = 11),
+         axis.text = element_text(size = 11),
+         axis.title = element_text(size = 11),
+         legend.text = element_text(size = 11))
+
+cowplot::plot_grid(p0,p1,p2,p3,p4, ncol = 5)
+
+# ggsave(filename = "final_fig/fig_s5d_leg.png", width = 74, height = 20, units = "cm")
+# ggsave(filename = "final_fig/fig_s5d_leg.svg", width = 74, height = 20, units = "cm")
+```
+
+
+## Figure S5F
+
+```{r fig.height=4, fig.width=14}
+
+FeaturePlot(seu_wocc,  pt.size = 0.5, features = c("Klrk1","Itga4"), blend = T, cols = c("indianred2","blue2"), max.cutoff = c(1,2), blend.threshold = 0) + theme(axis.text = element_text(size = 11), 
+                                                                        axis.title = element_text(size = 11),
+                                                                        legend.text = element_text(size = 11)) + ggtitle("")
+
+```
+
+Fig S5 - not used
+
+•	SE subcluster, percentage in DEREG+ and DEREG- animals
+
+```{r fig.width=12}
 df5 <- se@meta.data %>% group_by(hashtags, seurat_clusters) %>%
   summarise(n = n()) %>%
   mutate(freq = n / sum(n)) %>%
@@ -227,179 +363,11 @@ df5 <- se@meta.data %>% group_by(hashtags, seurat_clusters) %>%
  
 # ggsave(filename = "final_fig/fig_5g_leg.png", width = 16, height = 7, units = "cm")
 # ggsave(filename = "final_fig/fig_5g_leg.svg", width = 16, height = 7, units = "cm")
-
- 
-DimPlot(seu_wocc, cells.highlight = c(colnames(subset(se,seurat_clusters ==0))), cols.highlight = "orange2") + theme(axis.text = element_text(size = 11), 
-                                                                        axis.title = element_text(size = 11),
-                                                                        legend.text = element_text(size = 11)) + ggtitle("")
-# ggsave(filename = "final_fig/fig_s5e2_leg.png", width = 18.3, height = 13, units = "cm")
-# ggsave(filename = "final_fig/fig_s5e2_leg.eps", width = 18.3, height = 13, units = "cm")
-# ggsave(filename = "final_fig/fig_s5e2_leg.svg", width = 18.3, height = 13, units = "cm")
-
-
-DimPlot(seu_wocc, cells.highlight = c(colnames(subset(se,seurat_clusters ==1))), cols.highlight = "forestgreen") + theme(axis.text = element_text(size = 11), 
-                                                                        axis.title = element_text(size = 11),
-                                                                        legend.text = element_text(size = 11)) + ggtitle("")
-# ggsave(filename = "final_fig/fig_s5e1_leg.png", width = 18.3, height = 13, units = "cm")
-# ggsave(filename = "final_fig/fig_s5e1_leg.eps", width = 18.3, height = 13, units = "cm")
-# ggsave(filename = "final_fig/fig_s5e1_leg.svg", width = 18.3, height = 13, units = "cm")
-
-
-
-md <- seu_wocc@meta.data
-md$barcode <- colnames(seu_wocc)
-md <- md %>% mutate(is_subcluster = case_when(barcode %in% colnames(subset(se,seurat_clusters ==1)) ~ "Subcluster 1",
-                                              barcode %in% colnames(subset(se,seurat_clusters ==0)) ~ "Subcluster 0",
-                                              TRUE ~ "Other"))
-
-seu_wocc@meta.data <- md
-DimPlot(seu_wocc, group.by = "is_subcluster", cols.highlight = )
-
-
-DimPlot(seu_wocc, cells.highlight = list(colnames(subset(se,seurat_clusters ==0)),colnames(subset(se,seurat_clusters ==1))), cols.highlight = c("forestgreen","orange2")) + theme(axis.text = element_text(size = 11), axis.title = element_text(size = 11),
-                                                                        legend.text = element_text(size = 11)) + ggtitle("")
-# ggsave(filename = "final_fig/fig_s5e5_leg.png", width = 18.3, height = 13, units = "cm")
-# ggsave(filename = "final_fig/fig_s5e5_leg.eps", width = 18.3, height = 13, units = "cm")
-# ggsave(filename = "final_fig/fig_s5e5_leg.svg", width = 18.3, height = 13, units = "cm")
-
 ```
 
-•	reclustering of cluster 4 (SE cluster) same as D – DEREG+ and DEREG- cells
-•	same analysis as in Fig. 5E, but for subclusters of cluster 4 (SE cluster). 
-•	Projection of subclusters of cluster 4 into original UMAP plot (for Fig. S5E)
-•	TILpret – (comparison of our clusters with CD8+ T cells subsets formed during anti-viral response) for Fig. S5E
-
-
-# Figure S5
-
-### Figure S5A
-
-
-
-
-### Figure S5B
-
-•	Expression of GzmB in DEREG- and DEREG+ samples (Fig. S5 B), change colours – red for DEREG+, blue for DEREG- 
+### SessionInfo
 
 ```{r}
-VlnPlot(seu_wocc, features = "Gzmb", cols = c("indianred2","royalblue3"), flip = TRUE) + theme(axis.text.x = element_text(angle = 0, size = 16), axis.text = element_text(size = 11), axis.title = element_text(size = 11), legend.text = element_text(size = 11))
-
-# # ggsave(filename = "final_fig/fig_s5b_leg.png", width = 16, height = 8, units = "cm")
-# # ggsave(filename = "final_fig/fig_s5b_leg.eps", width = 16, height = 8, units = "cm")
-# # ggsave(filename = "final_fig/fig_s5b_leg.svg", width = 16, height = 8, units = "cm")
+sessionInfo()
 ```
 
-### Figure S5C
-
-•	Expression of different markers 
-
-```{r, fig.height=16, fig.width=28}
-FeaturePlot(seu_wocc, features = c("Gzma", "Gzmb", "Gzmk", "Il2ra", "Il7r", "Cd7", "Ifitm1", "Ifitm2", "Ifitm3", "Klrd1", "Id2", "Id3", "Itga4", "Itgae", "Sell", "Ccr7", "Cxcr6", "Cd27"), ncol = 6) + theme(axis.text.x = element_text(angle = 0, size = 16), axis.text = element_text(size = 11), axis.title = element_text(size = 11), legend.text = element_text(size = 11))
-
-# # ggsave(filename = "final_fig/fig_s5b_leg.png", width = 16, height = 8, units = "cm")
-# # ggsave(filename = "final_fig/fig_s5b_leg.eps", width = 16, height = 8, units = "cm")
-# # ggsave(filename = "final_fig/fig_s5b_leg.svg", width = 16, height = 8, units = "cm")
-```
-
-
-# ProjecTILs
-
-```{r}
-Tregs_filt_wocc <- seu_wocc
-
-Idents(Tregs_filt_wocc) <- Tregs_filt_wocc$seurat_clusters2
-DimPlot(Tregs_filt_wocc)
-
-ref <- readRDS("data/ProjecTILs/ref_LCMV_Atlas_mouse_v1.rds")
-
-query0 <- subset(Tregs_filt_wocc, seurat_clusters2 == 0)
-query.projected0 <- make.projection(query0, ref=ref, skip.normalize = T)
-p0 <- plot.projection(ref, query.projected0, linesize = 0.6) + 
-  ggtitle("Cluster 0") +
-   theme(axis.text.x = element_text(size = 11),
-         title = element_text(size = 11),
-         axis.text = element_text(size = 11), 
-         axis.title = element_text(size = 11), 
-         legend.text = element_text(size = 11)) 
-
-query1 <- subset(Tregs_filt_wocc, seurat_clusters2 == 1)
-query.projected1 <- make.projection(query1, ref=ref, skip.normalize = T)
-p1 <- plot.projection(ref, query.projected1, linesize = 0.6) + 
-  ggtitle("Cluster 1") +
-   theme(axis.text.x = element_text(size = 11),
-         title = element_text(size = 11),
-         axis.text = element_text(size = 11), 
-         axis.title = element_text(size = 11), 
-         legend.text = element_text(size = 11)) 
-
-query2 <- subset(Tregs_filt_wocc, seurat_clusters2 == 2)
-query.projected2 <- make.projection(query2, ref=ref, skip.normalize = T)
-p2 <- plot.projection(ref, query.projected2, linesize = 0.6) + 
-  ggtitle("Cluster 2") +
-   theme(axis.text.x = element_text(size = 11),
-         title = element_text(size = 11),
-         axis.text = element_text(size = 11), 
-         axis.title = element_text(size = 11), 
-         legend.text = element_text(size = 11)) 
-
-query3 <- subset(Tregs_filt_wocc, seurat_clusters2 == 3)
-query.projected3 <- make.projection(query3, ref=ref, skip.normalize = T)
-p3 <- plot.projection(ref, query.projected3, linesize = 0.6) + 
-  ggtitle("Cluster 3") +
-   theme(axis.text.x = element_text(size = 11),
-         title = element_text(size = 11),
-         axis.text = element_text(size = 11), 
-         axis.title = element_text(size = 11), 
-         legend.text = element_text(size = 11)) 
-
-query4 <- subset(Tregs_filt_wocc, seurat_clusters2 == 4)
-query.projected4 <- make.projection(query4, ref=ref, skip.normalize = T)
-p4 <- plot.projection(ref, query.projected4, linesize = 0.6) + 
-  ggtitle("Cluster 4") +
-   theme(axis.text.x = element_text(size = 11),
-         title = element_text(size = 11),
-         axis.text = element_text(size = 11), 
-         axis.title = element_text(size = 11), 
-         legend.text = element_text(size = 11)) 
-
-cowplot::plot_grid(p0,p1,p2,p3,p4, ncol = 5)
-# ggsave(filename = "final_fig/fig_s5d_leg.png", width = 74, height = 20, units = "cm")
-# ggsave(filename = "final_fig/fig_s5d_leg.svg", width = 74, height = 20, units = "cm")
-```
-
-
-K tem scRNAseq datum DEREG +/- potrebujeme jeden UMAP obrazek, kde by byly nasledujici vizualizace
-7:34
-Cervena - exprese KLRK1 (1+ readu) (edited) 
-7:35
-Zelena - exprese CD49d (1+ readu)
-7:35
-Zluta  - exprese CD49d i KLRK1 (1+ readu)
-7:35
-Seda - ani CD49d, ani KLRK1
-7:36
-je to spis na ilustraci pro pochopeni vztahu sortovanych populaci a scRNAseq dat
-
-```{r}
-md <- seu_wocc@meta.data
-which(rownames(seu_wocc@assays$RNA@counts)=="Klrk1")
-md$klrk1 <- seu_wocc@assays$RNA@counts[5335,]
-which(rownames(seu_wocc@assays$RNA@counts)=="Itga4")
-md$cd49d <- seu_wocc@assays$RNA@counts[1247,]
-md <- md %>% mutate(ondra_plot = case_when(cd49d > 0 & klrk1 > 0 ~ "zluta",
-                                           cd49d > 0 & klrk1 == 0 ~ "zelena",
-                                           cd49d == 0 & klrk1 > 0 ~ "cervena",
-                                           TRUE ~ "seda"))
-seu_wocc@meta.data <- md
-DimPlot(seu_wocc,  pt.size = 0.5, group.by = "ondra_plot",
-        cols = c("indianred2","grey60","darkseagreen3","dodgerblue")) + theme(axis.text = element_text(size = 11), 
-                                                                        axis.title = element_text(size = 11),
-                                                                        legend.text = element_text(size = 11)) + ggtitle("")
-
-
-
-FeaturePlot(seu_wocc,  pt.size = 0.5, features = c("Klrk1","Itga4"), blend = T, cols = c("indianred2","blue2"), max.cutoff = c(1,2), blend.threshold = 0) + theme(axis.text = element_text(size = 11), 
-                                                                        axis.title = element_text(size = 11),
-                                                                        legend.text = element_text(size = 11)) + ggtitle("")
-
-```
