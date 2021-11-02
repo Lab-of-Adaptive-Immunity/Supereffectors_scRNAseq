@@ -321,6 +321,7 @@ FeaturePlot(se, features = &quot;Il7r&quot;, max.cutoff = 2) + theme(axis.text =
 </div>
 <div id="figure-5h" class="section level2">
 <h2>Figure 5H</h2>
+<p>• Projection of the supereffector subclusters onto the original UMAP plot.</p>
 <pre class="r"><code>md &lt;- seu_wocc@meta.data
 md$barcode &lt;- colnames(seu_wocc)
 md &lt;- md %&gt;% mutate(is_subcluster = case_when(barcode %in% colnames(subset(se,seurat_clusters ==1)) ~ &quot;Subcluster 1&quot;,
@@ -335,7 +336,6 @@ DimPlot(seu_wocc, cells.highlight = list(colnames(subset(se,seurat_clusters ==0)
 <pre class="r"><code># ggsave(filename = &quot;final_fig/fig_s5e5_leg.png&quot;, width = 18.3, height = 13, units = &quot;cm&quot;)
 # ggsave(filename = &quot;final_fig/fig_s5e5_leg.eps&quot;, width = 18.3, height = 13, units = &quot;cm&quot;)
 # ggsave(filename = &quot;final_fig/fig_s5e5_leg.svg&quot;, width = 18.3, height = 13, units = &quot;cm&quot;)</code></pre>
-<p>• reclustering of cluster 4 (SE cluster) same as D – DEREG+ and DEREG- cells • same analysis as in Fig. 5E, but for subclusters of cluster 4 (SE cluster). • Projection of subclusters of cluster 4 into original UMAP plot (for Fig. S5E) • TILpret – (comparison of our clusters with CD8+ T cells subsets formed during anti-viral response) for Fig. S5E</p>
 </div>
 <div id="figure-s5" class="section level1">
 <h1>Figure S5</h1>
@@ -485,6 +485,7 @@ cowplot::plot_grid(p0,p1,p2,p3,p4, ncol = 5)</code></pre>
 </div>
 <div id="figure-s5f" class="section level2">
 <h2>Figure S5F</h2>
+<p>• Expression of Klrk1 and Cd49d in one plot (flow gating)</p>
 <pre class="r"><code>FeaturePlot(seu_wocc,  pt.size = 0.5, features = c(&quot;Klrk1&quot;,&quot;Itga4&quot;), blend = T, cols = c(&quot;indianred2&quot;,&quot;blue2&quot;), max.cutoff = c(1,2), blend.threshold = 0) + theme(axis.text = element_text(size = 11), 
                                                                         axis.title = element_text(size = 11),
                                                                         legend.text = element_text(size = 11)) + ggtitle(&quot;&quot;)</code></pre>
