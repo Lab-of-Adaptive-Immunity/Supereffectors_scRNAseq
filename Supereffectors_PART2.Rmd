@@ -22,6 +22,7 @@ library(reshape)
 library(SingleR)
 library(ProjecTILs)
 library(ggprism)
+library(patchwork)
 
 convertHumanGeneList <- function(x){
 
@@ -40,10 +41,9 @@ return(humanx)
 
 ```
 
-The input of this analysis is a processed Seurat file output of Supereffectors_Analysis_PART1. The file is called exp07_W3_Treg_processed_data_set_1_pre_filtering.rds. Please, download it from the GEO and save it to the ./data folder. 
+The input of this analysis is a processed Seurat file output of Supereffectors_Analysis_PART1. The file is called exp07_W3_Treg_processed_data_set_1_pre_filtering.rds. Please, download it from the GEO and save it to the `./data folder`. 
 
 In this part of the analysis workflow , we will perform all necessary QC steps leading to a filtered final file, in particular:
-
 
 - Annotation of cell types
 - Filtering low quality and contaminating cells
@@ -118,8 +118,13 @@ E07_W3_510_data_singler$singler[[2]]$SingleR.single$labels,
 Based on the SingleR annotations, our sample contains the following cell types:
 
 ```{r fig.width=8, fig.height=5}
-cowplot::plot_grid(DimPlot(E07_W3_510_data, group.by = "Immgen_annot_main"), 
-DimPlot(E07_W3_510_data, group.by = "MouseRNAseq_single"))
+
+p1 <- DimPlot(E07_W3_510_data, group.by = "Immgen_annot_single_main") + ggtitle("Immgen main annotations") + theme(title = element_text(size = 11))
+p2 <- DimPlot(E07_W3_510_data, group.by = "MouseRNAseq_single") + ggtitle("Mouse RNAseq annotations") + theme(title = element_text(size = 11))
+(p1 + p2) + plot_annotation(
+  title = 'Cell type annotations using the SingleR package',
+  theme = theme(plot.title = element_text(hjust = 0.5)))
+
 
 ```
 
@@ -131,8 +136,14 @@ We can also visualize the quality metrics in our cells:
 
 ```{r fig.width=8, fig.height=5}
 
-VlnPlot(E07_W3_510_data, features = c("nCount_RNA","nFeature_RNA")) + ggtitle("Counts of reads and counts of detected genes per cell")
-VlnPlot(E07_W3_510_data, features = c("percent.mt","percent.rt")) + ggtitle("Percentage of mitochondrial and ribosomal genes")
+p1 <- VlnPlot(E07_W3_510_data, features = c("nCount_RNA")) + ggtitle("RNA counts") + theme(title = element_text(size = 11)) + NoLegend()
+p2 <- VlnPlot(E07_W3_510_data, features = c("nFeature_RNA")) + ggtitle("Gene counts") + theme(title = element_text(size = 11)) + NoLegend()
+p3 <- VlnPlot(E07_W3_510_data, features = c("percent.mt")) + ggtitle("Percentage of mitochondrial genes") + theme(title = element_text(size = 11)) + NoLegend()
+p4 <- VlnPlot(E07_W3_510_data, features = c("percent.rt")) + ggtitle("Percentage of ribosomal genes") + theme(title = element_text(size = 11)) + NoLegend()
+
+
+(p1 + p2 + p3 + p4 + plot_layout(ncol = 2, byrow = T)) + plot_annotation(title = 'QC control of clusters',
+  theme = theme(plot.title = element_text(hjust = 0.5)))
 
 ```
 
@@ -147,7 +158,18 @@ Based on these plots, we will filter our dataset for the following conditions:
 E07_W3_510_data_filt <- subset(E07_W3_510_data, percent.mt < 7.5 & seurat_clusters %in% c(0:7,10))
 ```
 
+The filteres Seurat object contains  `r ncol(E07_W3_510_data_filt)` cells and `r nrow(E07_W3_510_data_filt)` genes.
+
 ## Normalization, dimensional reduction
+
+We will perform normalization, scaling, dimensional reduction and clustering using the filtered object. We use the following parameters:
+
+- default Seurat parameters for NormalizeData and ScaleData
+- selecting 1000 variable features
+- PCA using 1000 variable features (12 principal components)
+- umap based on 12 PCAs
+- clustering with 0.3 resolution
+
 
 
 ```{r}
@@ -159,18 +181,23 @@ E07_W3_510_data_filt <- RunUMAP(E07_W3_510_data_filt, reduction = "pca", dims = 
 E07_W3_510_data_filt <- FindNeighbors(E07_W3_510_data_filt, dims = 1:12)
 E07_W3_510_data_filt <- FindClusters(E07_W3_510_data_filt, resolution = 0.3)
 
+## Add new metadata column dered based on hashtags 
 md <- E07_W3_510_data_filt@meta.data %>% mutate(dereg = case_when(hashtags %in% c("Mouse_Hashtag_5","Mouse_Hashtag_6","Mouse_Hashtag_7") ~ "DEREG-",
                                                                   TRUE ~ "DEREG+"))
 E07_W3_510_data_filt@meta.data <- md
 rownames(E07_W3_510_data_filt@meta.data) <- colnames(E07_W3_510_data_filt)
 ```
 
-Here, we can see the resulting UMAP projection split by different conditions or animals.
+Here, we can see the resulting UMAP projection split by individual animals or experimental conditions (three mice DEREG+, three mice DEREG-).
 
 ```{r  fig.width=8, fig.height=5}
 
-DimPlot(E07_W3_510_data_filt, group.by = "hashtags")
-DimPlot(E07_W3_510_data_filt, group.by = "dereg")
+p1 <- DimPlot(E07_W3_510_data_filt, group.by = "hashtags") + ggtitle("UMAP by animals") + theme(title = element_text(size = 11))
+p2 <- DimPlot(E07_W3_510_data_filt, group.by = "dereg") + ggtitle("UMAP by DEREG status") + theme(title = element_text(size = 11))
+
+(p1 + p2 + plot_layout(ncol = 2, byrow = T)) + plot_annotation(title = 'UMAP - filtered sample',
+  theme = theme(plot.title = element_text(hjust = 0.5)))
+
 
 ```
 
@@ -187,7 +214,7 @@ FeaturePlot(E07_W3_510_data_filt, features = c("Mki67","Pcna"))
 
 We can see that most of the variability is driven by cell cycle. In the next step, we will use the Seurat estimation of cell cycle phase scores. These scores will help us regress out the effect of the cell cycle.
 
-```{r}
+```{r fig.width=10, fig.height=5}
  s.genes <- cc.genes.updated.2019$s.genes
  g2m.genes <- cc.genes.updated.2019$g2m.genes
 
@@ -198,7 +225,7 @@ seu_wocc <- CellCycleScoring(E07_W3_510_data_filt, s.features = m.s.genes, g2m.f
 DimPlot(seu_wocc, group.by = "Phase")
 
 seu_wocc <- ScaleData(seu_wocc, vars.to.regress = c("S.Score", "G2M.Score"), features = rownames(seu_wocc))
-seu_wocc <- FindVariableFeatures(seu_wocc, selection.method = "vst", nfeatures = 500,verbose = FALSE)
+seu_wocc <- FindVariableFeatures(seu_wocc, selection.method = "vst", nfeatures = 500, verbose = FALSE)
 
 
 seu_wocc <- RunPCA(seu_wocc, npcs = 12, verbose = FALSE)
@@ -206,9 +233,10 @@ seu_wocc <- RunUMAP(seu_wocc, reduction = "pca", dims = 1:12)
 seu_wocc <- FindNeighbors(seu_wocc, dims = 1:12)
 seu_wocc <- FindClusters(seu_wocc, resolution = 0.35)
   
-DimPlot(seu_wocc)
-DimPlot(seu_wocc, group.by = "dereg")
+p1 <- DimPlot(seu_wocc) + ggtitle("UMAP projection with clusters")
+p2 <- DimPlot(seu_wocc, group.by = "dereg") + ggtitle("UMAP projection by DEREG status")
 
+p1 + p2 
 
 ## In case you get mirror version of the paper UMAP:
 # seu_wocc@reductions$umap@cell.embeddings <- seu_wocc@reductions$umap@cell.embeddings*-1
@@ -216,4 +244,11 @@ DimPlot(seu_wocc, group.by = "dereg")
 
 ```
 
+This Seurat object was saved and used as the input for the next analysis (Supereffectors_PART3.Rmd).
+
+# SessionInfo
+
+```{r}
+sessionInfo()
+```
 
