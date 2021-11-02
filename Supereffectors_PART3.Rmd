@@ -202,6 +202,10 @@ FeaturePlot(se, features = "Il7r", max.cutoff = 2) + theme(axis.text = element_t
 
 
 ## Figure 5H
+
+• Projection of the supereffector subclusters onto the original UMAP plot.
+
+
 ```{r}
 md <- seu_wocc@meta.data
 md$barcode <- colnames(seu_wocc)
@@ -218,11 +222,6 @@ DimPlot(seu_wocc, cells.highlight = list(colnames(subset(se,seurat_clusters ==0)
 # ggsave(filename = "final_fig/fig_s5e5_leg.svg", width = 18.3, height = 13, units = "cm")
 
 ```
-
-•	reclustering of cluster 4 (SE cluster) same as D – DEREG+ and DEREG- cells
-•	same analysis as in Fig. 5E, but for subclusters of cluster 4 (SE cluster). 
-•	Projection of subclusters of cluster 4 into original UMAP plot (for Fig. S5E)
-•	TILpret – (comparison of our clusters with CD8+ T cells subsets formed during anti-viral response) for Fig. S5E
 
 
 # Figure S5
@@ -323,6 +322,8 @@ cowplot::plot_grid(p0,p1,p2,p3,p4, ncol = 5)
 
 
 ## Figure S5F
+
+•	Expression of Klrk1 and Cd49d in one plot (flow gating)
 
 ```{r fig.height=4, fig.width=14}
 
