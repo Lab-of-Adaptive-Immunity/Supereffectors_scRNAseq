@@ -336,7 +336,7 @@ Fig S5 - not used
 
 •	SE subcluster, percentage in DEREG+ and DEREG- animals
 
-```{r fig.width=12}
+```{r fig.width=6.5}
 df5 <- se@meta.data %>% group_by(hashtags, seurat_clusters) %>%
   summarise(n = n()) %>%
   mutate(freq = n / sum(n)) %>%
