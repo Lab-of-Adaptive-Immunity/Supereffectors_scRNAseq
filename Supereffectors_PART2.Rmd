@@ -117,7 +117,7 @@ E07_W3_510_data_singler$singler[[2]]$SingleR.single$labels,
 
 Based on the SingleR annotations, our sample contains the following cell types:
 
-```{r fig.width=8, fig.height=5}
+```{r fig.width=9, fig.height=3.5}
 
 p1 <- DimPlot(E07_W3_510_data, group.by = "Immgen_annot_single_main") + ggtitle("Immgen main annotations") + theme(title = element_text(size = 11))
 p2 <- DimPlot(E07_W3_510_data, group.by = "MouseRNAseq_single") + ggtitle("Mouse RNAseq annotations") + theme(title = element_text(size = 11))
@@ -190,7 +190,7 @@ rownames(E07_W3_510_data_filt@meta.data) <- colnames(E07_W3_510_data_filt)
 
 Here, we can see the resulting UMAP projection split by individual animals or experimental conditions (three mice DEREG+, three mice DEREG-).
 
-```{r  fig.width=8, fig.height=5}
+```{r  fig.width=9, fig.height=3.5}
 
 p1 <- DimPlot(E07_W3_510_data_filt, group.by = "hashtags") + ggtitle("UMAP by animals") + theme(title = element_text(size = 11))
 p2 <- DimPlot(E07_W3_510_data_filt, group.by = "dereg") + ggtitle("UMAP by DEREG status") + theme(title = element_text(size = 11))
@@ -208,14 +208,14 @@ p2 <- DimPlot(E07_W3_510_data_filt, group.by = "dereg") + ggtitle("UMAP by DEREG
 Last, we will estimate the effect of cell cycle, as our dataset contained proliferating T cells as well as memory T cells.
 
 
-```{r  fig.width=10, fig.height=5}
+```{r  fig.width=8, fig.height=3.5}
 FeaturePlot(E07_W3_510_data_filt, features = c("Mki67","Pcna"))
 ```
 
 We can see that most of the variability is driven by cell cycle. In the next step, we will use the Seurat estimation of cell cycle phase scores. These scores will help us regress out the effect of the cell cycle.
 
-```{r fig.width=10, fig.height=5}
- s.genes <- cc.genes.updated.2019$s.genes
+```{r fig.width=5, fig.height=3.5}
+s.genes <- cc.genes.updated.2019$s.genes
  g2m.genes <- cc.genes.updated.2019$g2m.genes
 
  m.s.genes <- convertHumanGeneList(cc.genes.updated.2019$s.genes)
@@ -223,7 +223,10 @@ We can see that most of the variability is driven by cell cycle. In the next ste
 
 seu_wocc <- CellCycleScoring(E07_W3_510_data_filt, s.features = m.s.genes, g2m.features = m.g2m.genes, set.ident = TRUE)
 DimPlot(seu_wocc, group.by = "Phase")
+```
 
+
+```{r fig.width=10, fig.height=5}
 seu_wocc <- ScaleData(seu_wocc, vars.to.regress = c("S.Score", "G2M.Score"), features = rownames(seu_wocc))
 seu_wocc <- FindVariableFeatures(seu_wocc, selection.method = "vst", nfeatures = 500, verbose = FALSE)
 
