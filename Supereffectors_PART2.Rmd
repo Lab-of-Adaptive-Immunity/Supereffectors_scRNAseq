@@ -222,13 +222,15 @@ s.genes <- cc.genes.updated.2019$s.genes
  m.g2m.genes <- convertHumanGeneList(cc.genes.updated.2019$g2m.genes)
 
 seu_wocc <- CellCycleScoring(E07_W3_510_data_filt, s.features = m.s.genes, g2m.features = m.g2m.genes, set.ident = TRUE)
-DimPlot(seu_wocc, group.by = "Phase")
+DimPlot(seu_wocc, group.by = "Phase") + ggtitle("Cell cycle phase")
 ```
 
 
 ```{r fig.width=10, fig.height=5}
 seu_wocc <- ScaleData(seu_wocc, vars.to.regress = c("S.Score", "G2M.Score"), features = rownames(seu_wocc))
-seu_wocc <- FindVariableFeatures(seu_wocc, selection.method = "vst", nfeatures = 500, verbose = FALSE)
+
+
+seu_wocc <- FindVariableFeatures(seu_wocc, selection.method = "vst", nfeatures = 600, verbose = FALSE)
 
 
 seu_wocc <- RunPCA(seu_wocc, npcs = 12, verbose = FALSE)
