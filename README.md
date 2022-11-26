@@ -42,7 +42,7 @@ tar.gz.files.
 		- Uses script: Supereffectors_PART1_2_demultiplexing.py  
 	    **Note:** If you have downloaded fastq files from link above this
 	    does not have to be ran, as those fastqs are already demultiplexed.
-	    You still need to run the script above to generate hashtag lists though.
+	    You still need to run the script above to generate hashtag lists though, but in that case use it only for data annotation and meta data creation.
 	- Mapping with cellranger:
 		- Same parameters are used as for pre-mapping.
 	- Preparation of first version of data set: 
@@ -60,3 +60,5 @@ tar.gz.files.
 <!-- ## PART 3:
 
  - All figures for the manuscript -->
+
+------------------------------------------------------------------------
