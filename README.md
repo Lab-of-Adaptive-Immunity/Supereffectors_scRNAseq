@@ -39,7 +39,7 @@ tar.gz.files.
 	    **Note:** If you have downloaded fastq files from link above this
 	    does not have to be ran, as those fastqs are already demultiplexed.
 	    You still need to run the script above to generate hashtag lists though.
-	- Mapping with cellranger:
+	- Mapping with cellranger (reference tanscriptome Mouse GRCm38, version 102 downloaded from Ensembl, default parameters for Cellranger):
 		- Uses Cellranger 5.0.0. on generated Fastqs
 	- Preparation of first version of data set: 
 		- Uses script: Supereffectors_PART1_3_Initial_analysis.Rmd
