@@ -30,7 +30,11 @@ tar.gz.files.
 ------------------------------------------------------------------------
 
 ## PART 1:
-- Extraction of the used samples based on Cell Hashtags:  
+- Pre-mapping of with cellranger:
+	- Cellranger 5.0.0 with default parameters
+	- Feature barcode reference: file FeatureReference.csv
+	- Reference tanscriptome Mouse GRCm38, version 102 downloaded from Ensembl
+- Extraction of the used samples based on Cell Hashtags on pre-mapped files:  
 	
 	- Extraction of barcodes separated by Hashtags:
 		- Uses script: Supereffectors_PART1_1_generating_sample_lists.Rmd
@@ -39,8 +43,8 @@ tar.gz.files.
 	    **Note:** If you have downloaded fastq files from link above this
 	    does not have to be ran, as those fastqs are already demultiplexed.
 	    You still need to run the script above to generate hashtag lists though.
-	- Mapping with cellranger (reference tanscriptome Mouse GRCm38, version 102 downloaded from Ensembl, default parameters for Cellranger):
-		- Uses Cellranger 5.0.0. on generated Fastqs
+	- Mapping with cellranger:
+		- Same parameters are used as for pre-mapping.
 	- Preparation of first version of data set: 
 		- Uses script: Supereffectors_PART1_3_Initial_analysis.Rmd
 
