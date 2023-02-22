@@ -11,9 +11,14 @@ from the above paper, but WITHOUT ANY WARRANTY; without even the
 implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
 See the MIT Licence and LICENSE.md file for more details.
 
-**Manuscript:** LINK
+**Manuscript:** 
 
-**Deposited data:** LINK
+Tsyklauri O, Chadimova T, Niederlova V, et al. Regulatory T cells suppress the formation of potent KLRK1 and IL-7R expressing effector CD8 T cells by limiting IL-2. Elife. 2023;12:e79342. doi:10.7554/eLife.79342
+
+*Link:* https://elifesciences.org/articles/79342
+
+    PMID: 36705564 DOI: 10.7554/eLife.79342 
+**Deposited data:** https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE183940
 
 ## Requirements
 
